@@ -19,15 +19,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-           // 'owner_id',
-         //   'category_id',
             'title',
-        //    'category_translation.name',
-        /*    [
+         //  'category_translation.name',
+            [
                'label' => 'category',
-               'value' => 'category_translation.name',
-            ],*/
-            
+               'value' => 'category.name',
+            ],
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

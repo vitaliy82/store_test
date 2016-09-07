@@ -44,7 +44,6 @@ $config = [
             'showScriptName' => false,
             'rules' => [
                 '<lang>/<module>/<controller>/<action>' => '<module>/<controller>/<action>',
-             //   '<module>/<controller>/<action>' => '<module>/<controller>/<action>',
             ],
         ],
         'i18n' => [

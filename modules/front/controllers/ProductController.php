@@ -36,20 +36,17 @@ class ProductController extends Controller
      * Lists all Product models.
      * @return mixed
      */
-    public function actionIndex($lang = '1')
+    public function actionIndex()
     {
-        $this->getLang();
-        exit;
-        
-           //      $lang = (!$lang)? '1': $lang;
-       // echo '<pre>';var_dump($lang->id );exit;
-
+        $lang = $this->getLang();
+       // $lang = (!$lang)? '1': $lang;
+  
         $dataProvider = new ActiveDataProvider([
             'query' => Product::find()
-            /*    ->select('*')
-                ->joinWith('category')  
-                ->leftJoin('category_translation', '`category_translation`.`category_id` = `category`.`id`')
-                ->where(['category_translation.lang_id' => $lang])*/
+            ->select('product.id, product.title, category_translation.name, category.name')
+            ->joinWith('category')  
+            ->leftJoin('category_translation', '`category_translation`.`category_id` = `category`.`id`')
+            ->where(['category_translation.lang_id' => $lang])
         ]);
 
         return $this->render('index', [
@@ -156,9 +153,12 @@ class ProductController extends Controller
         return treeBuilder::buildTree($category);
     }
 
+    /**
+     * 
+     */
     protected function getLang(){
-        $parts = explode('/', Yii::$app->request->getUri());
-        echo $parts[0];
+        $parts = explode('/', Yii::$app->request->url);
+        return $parts[1];
     }
     
 }
