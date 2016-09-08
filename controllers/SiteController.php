@@ -8,6 +8,9 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\components\treeBuilder;
+use app\modules\admin\models\Category;
+use app\modules\front\models\Product;
 
 class SiteController extends Controller
 {
@@ -58,9 +61,15 @@ class SiteController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
+    public function actionIndex($id = 1)
     {
-        return $this->render('index');
+        $category = Category::find()->orderBy('order_id')->all();
+        treeBuilder::$activeRecord = true;
+        $product = Product::find()->where(['category_id' => $id])->all();
+        return $this->render('index', [
+            'data' => treeBuilder::buildTree($category),
+            'product' => $product
+        ]);
     }
 
     /**

@@ -15,8 +15,9 @@ class m160905_075904_init_migrate extends Migration
         $this->createTable('category', [
             'id' => $this->primaryKey(),
             'parent_id' => $this->integer()->defaultValue(0),
+            'order_id' => $this->integer()->defaultValue(0),
             'name' => $this->string(),
-            'img' => $this->integer()
+            'img' => $this->string()
         ]);
         
         $this->createTable('category_translation', [

@@ -9,6 +9,9 @@ use yii\grid\GridView;
 $this->title = Yii::t('app', 'Products');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
+<?php   //foreach ($dataProvider->getModels() as $el) {  var_dump(  $el->category->name ); } ?>
+
 <div class="product-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
@@ -23,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
          //  'category_translation.name',
             [
                'label' => 'category',
-               'value' => 'category.name',
+            //   'value' => $dataProvider->getModels()//->category->name //'category1.name',
             ],
             ['class' => 'yii\grid\ActionColumn'],
         ],

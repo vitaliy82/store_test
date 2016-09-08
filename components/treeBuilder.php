@@ -49,9 +49,52 @@ class treeBuilder {
             }
         }
     }
+
+    static function getTreeList($tree, $r = 0, $p = null, &$out = '') {
+        foreach ($tree as $i => $t) {
+            $out .= '<li class="dd-item" data-id="'.$t['id'].
+                '"><div class="dd-handle">'.$t['name'].'</div>';
+            if ($t['parent_id'] == $p) {
+                // reset $r
+                $r = 0;
+            }
+            if (isset($t['_children'])) {
+                $out .= '<ol class="dd-list">';
+                self::getTreeList( $t['_children'], ++$r, $t['parent_id'], $out);
+                $out .= '</ol>';
+            }
+            $out .= '</li>';
+        }
+        return $out;
+    }
+    
+    static function getTreeListFull($tree, $dom_id){
+        return '<div class="dd" id="'.$dom_id.'"><ol class="dd-list">'.
+        self::getTreeList($tree).'</ol></div>';       
+    }
+
+    static function getTreeListLink($link = '', $tree, $r = 0, $p = null, &$out = '') {
+        foreach ($tree as $i => $t) {
+            $out .= '<li><a href='.$link.$t['id'].'>'.$t['name'].'</a>';
+            if ($t['parent_id'] == $p) {
+                $r = 0;
+            }
+            if (isset($t['_children'])) {
+                $out .= '<ul>';
+                self::getTreeListLink($link, $t['_children'], ++$r, $t['parent_id'], $out);
+                $out .= '</ul>';
+            }
+            $out .= '</li>';
+        }
+        return $out;
+    }
+    
+    static function getTreeListLinkFull($tree, $link = ''){
+        return '<ul>'.self::getTreeListLink($link, $tree).'</ul>';       
+    }
     
     static function getRoot() {
         echo "\t<option value='0'>--</option>\n";
     }
-
+    
 }

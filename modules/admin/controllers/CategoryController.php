@@ -4,13 +4,14 @@ namespace app\modules\admin\controllers;
 
 use Yii;
 use app\modules\admin\models\Category;
-use yii\data\ActiveDataProvider;
+//use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\modules\admin\models\CategoryTranslation;
 use app\modules\admin\models\Language;
 use app\components\treeBuilder;
+use yii\web\UploadedFile;
 
 /**
  * CategoryController implements the CRUD actions for Category model.
@@ -38,12 +39,8 @@ class CategoryController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Category::find(),
-        ]);
-
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+            'data' => $this->getTreeCategory(),
         ]);
     }
 
@@ -70,7 +67,11 @@ class CategoryController extends Controller
         $translation = new CategoryTranslation();
         $translation->load(Yii::$app->request->post());
         $model->name = $translation->name;
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) ) {
+           $img = $model->img = UploadedFile::getInstance($model, 'img');
+            $model->save();
+            $model->img = $img;
+            $model->upload() ;
             $translation->category_id = $model->id;
             $translation->save();
             return $this->redirect(['view', 'id' => $model->id]);
@@ -164,9 +165,29 @@ class CategoryController extends Controller
      * @return string
      */
     protected function getTreeCategory(){
-        $category = Category::find()->all();
+        $category = Category::find()->orderBy('order_id')->all();
         treeBuilder::$activeRecord = true;
         return treeBuilder::buildTree($category);
     }
 
+    public function actionListsave()
+    {
+        $post = Yii::$app->request->post();
+        $list = json_decode($post['list']);
+        $this->treeSave($list);
+        return 'ok';
+    }
+
+    protected function treeSave($tree, $parent = 0){
+        foreach($tree as $key=>$val){
+            $model = $this->findModel($val->id);
+            $model->parent_id = $parent;
+            $model->order_id = $key;
+            $model->save();
+            if(isset($val->children)){
+                $this->treeSave($val->children, $val->id);
+            }                
+        }
+    }
+    
 }

@@ -11,7 +11,7 @@ use app\components\treeBuilder;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 <div class="category-form">
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
     <?php
         if(isset($model->id)){
             echo Html::hiddenInput('select_lang', '0');
@@ -32,7 +32,7 @@ use app\components\treeBuilder;
         ?>
     </select>
     
-    <?php // echo $form->field($model, 'parent_id')->textInput() ?>
+    <?= $form->field($model, 'img')->fileInput() ?>
     <?= $form->field($translation, 'name')->textInput(['maxlength' => true]) ?>
     <?= $form->field($translation, 'description')->textArea(['rows' => '3']) ?>
     <div class="form-group">
