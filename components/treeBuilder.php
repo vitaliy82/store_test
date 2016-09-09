@@ -34,7 +34,19 @@ class treeBuilder {
         }
         return $tree;
     }
-
+    
+    static function getButton($link, $id = '') {
+        return '<span><a href="'.$link.'/view?id='.$id.'" title="View" aria-label="View" data-pjax="0">
+            <span class="glyphicon glyphicon-eye-open"></span>
+        </a> 
+        <a href="'.$link.'/update?id='.$id.'" title="Update" aria-label="Update" data-pjax="0">
+            <span class="glyphicon glyphicon-pencil"></span>
+        </a>
+        <a href="'.$link.'/delete?id='.$id.'" title="Delete" aria-label="Delete" data-confirm="Are you sure you want to delete this item?" data-method="post" data-pjax="0">
+            <span class="glyphicon glyphicon-trash"></span>
+        </a></span>';        
+    }        
+            
     static function printTree($current, $tree, $r = 0, $p = null) {
         foreach ($tree as $i => $t) {
             $dash = ($t['parent_id'] == 0) ? '' : str_repeat('--', $r) .' ';
@@ -53,7 +65,7 @@ class treeBuilder {
     static function getTreeList($tree, $r = 0, $p = null, &$out = '') {
         foreach ($tree as $i => $t) {
             $out .= '<li class="dd-item" data-id="'.$t['id'].
-                '"><div class="dd-handle">'.$t['name'].'</div>';
+                '"><span><div class="dd-handle">'.$t['name'].'</div></span>'.self::getButton('/admin/category', $t['id']);
             if ($t['parent_id'] == $p) {
                 // reset $r
                 $r = 0;
